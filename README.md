@@ -103,6 +103,11 @@ vagrant@server1:~/ps$
 pg=# CREATE DATABASE test_database;
 CREATE DATABASE
 vagrant@server1:~/ps$ wget https://github.com/netology-code/virt-homeworks/blob/virt-11/06-db-04-postgresql/test_data/test_dump.sql
+pg=# GRANT ALL PRIVILEGES ON DATABASE "test_database" to admin;
+GRANT
+vagrant@server1:~/ps$ sudo docker cp /home/vagrant/ps/test_dump.sql 51045e62f695:/home/test_dump.sql
+Successfully copied 180kB to 51045e62f695:/home/test_dump.sql
+
 ```
 
 # Задача 3
