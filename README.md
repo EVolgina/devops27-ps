@@ -100,16 +100,72 @@ vagrant@server1:~/ps$
 - Приведите в ответе команду, которую вы использовали для вычисления, и полученный результат.
 ### Ответ:
 ```
-pg=# CREATE DATABASE test_database;
+pg=# CREATE DATABASE test_database; - создали базу
 CREATE DATABASE
-vagrant@server1:~/ps$ wget https://github.com/netology-code/virt-homeworks/blob/virt-11/06-db-04-postgresql/test_data/test_dump.sql
-pg=# GRANT ALL PRIVILEGES ON DATABASE "test_database" to admin;
+pg=# GRANT ALL PRIVILEGES ON DATABASE "test_database" to admin; создали пользователя с правами
 GRANT
-vagrant@server1:~/ps$ sudo docker cp /home/vagrant/ps/test_dump.sql 51045e62f695:/home/test_dump.sql
+vagrant@server1:~/ps$ wget https://raw.githubusercontent.com/netology-code/virt-homeworks/virt-11/06-db-04-postgresql/test_data/test_dump.sql  - выкачали базу на хост
+vagrant@server1:~/ps$ sudo docker cp /home/vagrant/ps/test_dump.sql 51045e62f695:/home/test_dump.sql  - скопировали
 Successfully copied 180kB to 51045e62f695:/home/test_dump.sql
-
+vagrant@server1:~/ps$ sudo docker exec -it 51045e62f695 bash
+root@51045e62f695:/# psql -U admin -d test_database -f /home/test_dump.sql  - восттановили бэкап
+SET
+SET
+SET
+SET
+SET
+ set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+psql:/home/test_dump.sql:34: ERROR:  role "postgres" does not exist
+CREATE SEQUENCE
+psql:/home/test_dump.sql:49: ERROR:  role "postgres" does not exist
+ALTER SEQUENCE
+ALTER TABLE
+COPY 8
+ setval
+--------
+      8
+(1 row)
+ALTER TABLE
+``
+- Подключаемся к базе, смотрим таблицы и запускаем ANALYZE
 ```
+vagrant@server1:~/ps$ sudo docker exec -it 51045e62f695 psql -U admin -d pg
+psql (15.3 (Debian 15.3-1.pgdg110+1))
+Type "help" for help.
 
+pg=# \c test_database
+You are now connected to database "test_database" as user "admin".
+test_database=# \dt
+        List of relations
+ Schema |  Name  | Type  | Owner
+--------+--------+-------+-------
+ public | orders | table | admin
+(1 row)
+
+test_database=# ANALYZE verbose orders;
+INFO:  analyzing "public.orders"
+INFO:  "orders": scanned 1 of 1 pages, containing 8 live rows and 0 dead rows; 8 rows in sample, 8 estimated total rows
+ANALYZE
+```
+- Найдем столбец таблицы orders с наибольшим средним значением размера элементов в байтах (это title)
+```
+test_database=# select attname, avg_width from pg_stats where tablename='orders';
+ attname | avg_width
+---------+-----------
+ id      |         4
+ title   |        16
+ price   |         4
+(3 rows)
+```
 # Задача 3
 - Архитектор и администратор БД выяснили, что ваша таблица orders разрослась до невиданных размеров и поиск по ней занимает долгое время. Вам как успешному выпускнику курсов DevOps в Нетологии предложили провести разбиение таблицы на 2: шардировать на orders_1 - price>499 и orders_2 - price<=499.
 - Предложите SQL-транзакцию для проведения этой операции.\
