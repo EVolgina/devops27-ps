@@ -135,8 +135,9 @@ COPY 8
       8
 (1 row)
 ALTER TABLE
-``
+```
 - Подключаемся к базе, смотрим таблицы и запускаем ANALYZE
+
 ```
 vagrant@server1:~/ps$ sudo docker exec -it 51045e62f695 psql -U admin -d pg
 psql (15.3 (Debian 15.3-1.pgdg110+1))
@@ -157,6 +158,7 @@ INFO:  "orders": scanned 1 of 1 pages, containing 8 live rows and 0 dead rows; 8
 ANALYZE
 ```
 - Найдем столбец таблицы orders с наибольшим средним значением размера элементов в байтах (это title)
+
 ```
 test_database=# select attname, avg_width from pg_stats where tablename='orders';
  attname | avg_width
@@ -165,8 +167,8 @@ test_database=# select attname, avg_width from pg_stats where tablename='orders'
  title   |        16
  price   |         4
 (3 rows)
-
 ```
+
 # Задача 3
 - Архитектор и администратор БД выяснили, что ваша таблица orders разрослась до невиданных размеров и поиск по ней занимает долгое время. Вам как успешному выпускнику курсов DevOps в Нетологии предложили провести разбиение таблицы на 2: шардировать на orders_1 - price>499 и orders_2 - price<=499.
 - Предложите SQL-транзакцию для проведения этой операции.\
