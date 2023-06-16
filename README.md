@@ -211,6 +211,17 @@ test_database=# SELECT * FROM public.orders_2;
 (5 rows)
 ```
 # Задача 4
-Используя утилиту pg_dump, создайте бекап БД test_database.
-Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца title для таблиц test_database?
+- Используя утилиту pg_dump, создайте бекап БД test_database.
+- Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца title для таблиц test_database?
 ### Ответ:
+```
+root@51045e62f695:/# pg_dump -U admin -d test_database >test_database_dump.sql
+root@51045e62f695:/# ls
+bin   dev                         etc   lib    media  opt   root  sbin  sys                     tmp  var
+boot  docker-entrypoint-initdb.d  home  lib64  mnt    proc  run   srv   test_database_dump.sql  usr
+```
+- чтобы добавить уникальность значения столбца title для таблиц test_database
+```
+test_database=# CREATE unique INDEX title_un ON public.orders(title);
+CREATE INDEX
+```
